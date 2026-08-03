@@ -42,6 +42,7 @@ model User {
   workouts      WorkoutSession[]
   meals         MealEntry[]
   waterEntries  WaterIntakeEntry[]
+  sleepEntries  SleepEntry[]
   progress      ProgressEntry[]
   goals         Goal[]
   settings      UserSettings?
@@ -125,6 +126,20 @@ model WaterIntakeEntry {
   updatedAt  DateTime @updatedAt
 
   @@index([userId, takenAt])
+}
+
+model SleepEntry {
+  id           String   @id @default(cuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sleepHours   Decimal  @db.Decimal(4, 2)
+  quality      Int
+  recordedAt   DateTime
+  note         String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([userId, recordedAt])
 }
 
 model ProgressEntry {
