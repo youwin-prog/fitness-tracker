@@ -1,0 +1,146 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum WorkoutType {
+  STRENGTH
+  CARDIO
+  MOBILITY
+  RECOVERY
+}
+
+enum MealType {
+  BREAKFAST
+  LUNCH
+  DINNER
+  SNACK
+}
+
+enum GoalStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+}
+
+model User {
+  id            String         @id @default(cuid())
+  clerkUserId   String         @unique
+  email         String         @unique
+  name          String?
+  imageUrl      String?
+  heightCm      Int?
+  weightKg      Decimal?       @db.Decimal(5, 2)
+  goalWeightKg  Decimal?       @db.Decimal(5, 2)
+  dateOfBirth   DateTime?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  workouts      WorkoutSession[]
+  meals         MealEntry[]
+  progress      ProgressEntry[]
+  goals         Goal[]
+  settings      UserSettings?
+}
+
+model UserSettings {
+  id                        String   @id @default(cuid())
+  userId                    String   @unique
+  user                      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  darkMode                  Boolean  @default(true)
+  emailWorkoutReminders     Boolean  @default(true)
+  emailNutritionReminders   Boolean  @default(true)
+  weeklySummaryEmail        Boolean  @default(true)
+  publicProfile             Boolean  @default(false)
+  createdAt                 DateTime @default(now())
+  updatedAt                 DateTime @updatedAt
+}
+
+model WorkoutSession {
+  id                String            @id @default(cuid())
+  userId            String
+  user              User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title             String
+  type              WorkoutType
+  startedAt         DateTime
+  endedAt           DateTime?
+  durationMinutes   Int?
+  caloriesBurned    Int?
+  heartRateAverage   Int?
+  notes             String?
+  exercises         WorkoutExercise[]
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+  @@index([userId, startedAt])
+}
+
+model WorkoutExercise {
+  id             String         @id @default(cuid())
+  workoutId      String
+  workout        WorkoutSession  @relation(fields: [workoutId], references: [id], onDelete: Cascade)
+  name           String
+  sets           Int
+  reps           String
+  loadKg         Decimal?       @db.Decimal(6, 2)
+  restSeconds     Int?
+  performedAt     DateTime       @default(now())
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  @@index([workoutId])
+}
+
+model MealEntry {
+  id             String       @id @default(cuid())
+  userId         String
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type           MealType
+  name           String
+  calories       Int
+  proteinGrams   Decimal?     @db.Decimal(6, 2)
+  carbsGrams     Decimal?     @db.Decimal(6, 2)
+  fatGrams       Decimal?     @db.Decimal(6, 2)
+  eatenAt        DateTime
+  notes          String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@index([userId, eatenAt])
+}
+
+model ProgressEntry {
+  id             String       @id @default(cuid())
+  userId         String
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  recordedAt     DateTime
+  weightKg       Decimal?     @db.Decimal(5, 2)
+  bodyFatPercent Decimal?     @db.Decimal(5, 2)
+  waistCm        Decimal?     @db.Decimal(5, 2)
+  restingHeartRate Int?
+  sleepHours     Decimal?     @db.Decimal(4, 2)
+  note           String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@index([userId, recordedAt])
+}
+
+model Goal {
+  id             String       @id @default(cuid())
+  userId         String
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title          String
+  description    String?
+  status         GoalStatus   @default(NOT_STARTED)
+  targetValue    Decimal?     @db.Decimal(8, 2)
+  currentValue   Decimal?     @db.Decimal(8, 2)
+  targetDate     DateTime?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@index([userId, status])
+}
