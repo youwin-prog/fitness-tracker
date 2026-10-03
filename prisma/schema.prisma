@@ -33,6 +33,9 @@ model User {
   email         String         @unique
   name          String?
   imageUrl      String?
+  gender        String?
+  activityLevel String?
+  fitnessGoal   String?
   heightCm      Int?
   weightKg      Decimal?       @db.Decimal(5, 2)
   goalWeightKg  Decimal?       @db.Decimal(5, 2)

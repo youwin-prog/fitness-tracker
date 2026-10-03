@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const goalStatusSchema = z.enum(["ACTIVE", "COMPLETED"]);
+export const goalStatusSchema = z.enum(["NOT_STARTED", "IN_PROGRESS", "COMPLETED"]);
 
 export const goalFormSchema = z.object({
   id: z.string().optional(),

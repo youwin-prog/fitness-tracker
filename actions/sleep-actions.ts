@@ -14,7 +14,7 @@ export type SleepActionState = {
 };
 
 async function getAuthenticatedUser() {
-  const { userId } = auth();
+  const { userId } = await auth();
 
   if (!userId) {
     redirect("/login");

@@ -29,7 +29,7 @@ export function AuthShell({
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(59,130,246,0.18),_transparent_28%),radial-gradient(circle_at_top_right,_rgba(14,165,233,0.14),_transparent_24%),linear-gradient(180deg,#020617_0%,#020410_45%,#000000_100%)]" />
       <motion.div
         aria-hidden="true"
-        className="absolute left-1/2 top-[-12rem] h-[32rem] w-[32rem] -translate-x-1/2 rounded-full bg-cyan-500/10 blur-3xl"
+        className="absolute left-1/2 top-[-12rem] h-[32rem] w-[32rem] -translate-x-1/2 rounded-full bg-red-500/10 blur-3xl"
         animate={{ scale: [1, 1.08, 1], opacity: [0.45, 0.75, 0.45] }}
         transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
       />
@@ -37,7 +37,7 @@ export function AuthShell({
       <div className="relative mx-auto flex min-h-screen w-full max-w-6xl items-center px-4 py-10 sm:px-6 lg:px-8">
         <div className="grid w-full gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-12">
           <section className="flex flex-col justify-center space-y-6 lg:pr-6">
-            <span className="inline-flex w-fit rounded-full border border-cyan-400/20 bg-cyan-400/10 px-4 py-2 text-xs font-medium uppercase tracking-[0.2em] text-cyan-200">
+            <span className="inline-flex w-fit rounded-full border border-red-400/20 bg-red-400/10 px-4 py-2 text-xs font-medium uppercase tracking-[0.2em] text-red-200">
               {eyebrow}
             </span>
             <div className="space-y-4">
@@ -75,7 +75,7 @@ export function AuthShell({
                 {children}
                 <p className="text-center text-sm text-slate-400">
                   {footerText}{" "}
-                  <Link className="font-medium text-cyan-300 transition hover:text-cyan-200" href={footerHref}>
+                  <Link className="font-medium text-red-300 transition hover:text-red-200" href={footerHref}>
                     {footerLabel}
                   </Link>
                 </p>

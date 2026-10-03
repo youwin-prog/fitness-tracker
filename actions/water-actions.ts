@@ -18,7 +18,7 @@ export type WaterGoalActionState = {
 };
 
 async function getAuthenticatedUser() {
-  const { userId } = auth();
+  const { userId } = await auth();
 
   if (!userId) {
     redirect("/login");
@@ -92,7 +92,7 @@ export async function getWaterModuleData(): Promise<WaterModuleData> {
   });
 
   return {
-    goalMl: settings.waterGoalMl,
+    goalMl: settings.waterGoalMl ?? 2500,
     entries: entries.map((entry) => ({
       id: entry.id,
       amountMl: entry.amountMl,

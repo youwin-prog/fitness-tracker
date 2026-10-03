@@ -14,7 +14,7 @@ export type GoalActionState = {
 };
 
 async function getAuthenticatedUser() {
-  const { userId } = auth();
+  const { userId } = await auth();
 
   if (!userId) {
     redirect("/login");
@@ -53,12 +53,14 @@ async function getAuthenticatedUser() {
   });
 }
 
-function toGoalStatus(status: "ACTIVE" | "COMPLETED") {
-  return status === "COMPLETED" ? "COMPLETED" : "IN_PROGRESS";
+function toGoalStatus(status: "NOT_STARTED" | "IN_PROGRESS" | "COMPLETED") {
+  return status;
 }
 
-function fromGoalStatus(status: string): "ACTIVE" | "COMPLETED" {
-  return status === "COMPLETED" ? "COMPLETED" : "ACTIVE";
+function fromGoalStatus(status: string): "NOT_STARTED" | "IN_PROGRESS" | "COMPLETED" {
+  if (status === "COMPLETED") return "COMPLETED";
+  if (status === "IN_PROGRESS") return "IN_PROGRESS";
+  return "NOT_STARTED";
 }
 
 export async function getGoalModuleData(): Promise<GoalModuleData> {
@@ -168,11 +170,15 @@ export async function completeGoal(id: string): Promise<GoalActionState> {
     return { message: "Goal not found." };
   }
 
+  if (existingGoal.targetValue === null) {
+    return { message: "Cannot complete goal without a target value." };
+  }
+
   await prisma.goal.update({
     where: { id: existingGoal.id },
     data: {
       status: "COMPLETED",
-      currentValue: existingGoal.targetValue ?? existingGoal.currentValue,
+      currentValue: existingGoal.targetValue,
     },
   });
 

@@ -27,13 +27,27 @@ const optionalNumber = (message: string) =>
     }),
   );
 
+const requiredNumber = (message: string) =>
+  z.preprocess(
+    (value) => {
+      if (value === "" || value === null || value === undefined) {
+        return undefined;
+      }
+
+      return value;
+    },
+    z.coerce.number().int().positive().optional().refine((value) => value === undefined || Number.isFinite(value), {
+      message,
+    }),
+  );
+
 const workoutFormSchema = z.object({
   id: z.string().optional(),
   title: z.string().min(2, "Workout title is required"),
   type: workoutTypeSchema,
   startedAt: z.string().min(1, "Start date is required"),
   endedAt: optionalDateString,
-  durationMinutes: optionalNumber("Duration must be a valid number"),
+  durationMinutes: requiredNumber("Duration must be a positive number"),
   caloriesBurned: optionalNumber("Calories burned must be a valid number"),
   heartRateAverage: optionalNumber("Heart rate must be a valid number"),
   notes: z.preprocess((value) => (value === "" ? undefined : value), z.string().max(500).optional()),
@@ -45,7 +59,7 @@ export type WorkoutFormState = {
 };
 
 async function getAuthenticatedUser() {
-  const { userId } = auth();
+  const { userId } = await auth();
 
   if (!userId) {
     redirect("/login");

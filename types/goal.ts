@@ -5,7 +5,7 @@ export type GoalRecord = {
   targetValue: number;
   currentValue: number;
   targetDate: string | null;
-  status: "ACTIVE" | "COMPLETED";
+  status: "NOT_STARTED" | "IN_PROGRESS" | "COMPLETED";
 };
 
 export type GoalModuleData = {

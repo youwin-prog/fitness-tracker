@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { Apple, Beef, CookingPot, PencilLine, Plus, Trash2 } from "lucide-react";
@@ -16,13 +17,13 @@ type NutritionCrudProps = {
 
 function MetricCard({ label, value, icon: Icon }: { label: string; value: string; icon: typeof Apple }) {
   return (
-    <div className="rounded-[1.75rem] border border-white/10 bg-white/5 p-5 backdrop-blur-xl">
+    <div className="rounded-[1.75rem] border border-border bg-card p-5 backdrop-blur-xl">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-sm text-slate-400">{label}</p>
-          <p className="mt-2 text-2xl font-semibold text-white">{value}</p>
+          <p className="text-sm text-text-secondary">{label}</p>
+          <p className="mt-2 text-2xl font-semibold text-text-primary">{value}</p>
         </div>
-        <div className="rounded-2xl border border-cyan-400/20 bg-cyan-400/10 p-3 text-cyan-300">
+        <div className="rounded-2xl border border-cyan-400/20 bg-cyan-400/10 p-3 text-cyan-600 dark:text-cyan-300">
           <Icon className="h-5 w-5" />
         </div>
       </div>
@@ -42,20 +43,20 @@ function MealRow({
   isSelected: boolean;
 }) {
   return (
-    <div className={`rounded-[1.5rem] border p-5 ${isSelected ? "border-cyan-400/30 bg-cyan-400/5" : "border-white/10 bg-slate-950/60"}`}>
+    <div className={`rounded-[1.5rem] border p-5 ${isSelected ? "border-cyan-400/30 bg-cyan-400/5" : "border-border bg-card"}`}>
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="space-y-3">
           <div className="flex flex-wrap items-center gap-3">
-            <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium uppercase tracking-[0.18em] text-cyan-200/80">
+            <span className="rounded-full border border-border bg-secondary/70 px-3 py-1 text-xs font-medium uppercase tracking-[0.18em] text-cyan-600 dark:text-cyan-200/80">
               {meal.type}
             </span>
-            <span className="text-xs uppercase tracking-[0.18em] text-slate-400">{new Date(meal.eatenAt).toLocaleString()}</span>
+            <span className="text-xs uppercase tracking-[0.18em] text-text-secondary">{new Date(meal.eatenAt).toLocaleString()}</span>
           </div>
           <div>
-            <h4 className="text-lg font-semibold text-white">{meal.name}</h4>
-            <p className="mt-1 text-sm text-slate-300">{meal.calories} kcal</p>
+            <h4 className="text-lg font-semibold text-text-primary">{meal.name}</h4>
+            <p className="mt-1 text-sm text-text-secondary">{meal.calories} kcal</p>
           </div>
-          <div className="grid gap-2 text-sm text-slate-300 sm:grid-cols-3">
+          <div className="grid gap-2 text-sm text-text-secondary sm:grid-cols-3">
             <p>Protein: {meal.proteinGrams} g</p>
             <p>Carbs: {meal.carbsGrams} g</p>
             <p>Fat: {meal.fatGrams} g</p>
@@ -66,7 +67,7 @@ function MealRow({
           <button
             type="button"
             onClick={() => onEdit(meal)}
-            className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-white transition hover:bg-white/10"
+            className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm font-medium text-text-primary transition hover:bg-secondary/70"
           >
             <PencilLine className="h-4 w-4" />
             Edit
@@ -74,7 +75,7 @@ function MealRow({
           <button
             type="button"
             onClick={() => onDelete(meal.id)}
-            className="inline-flex items-center gap-2 rounded-full border border-rose-500/20 bg-rose-500/10 px-4 py-2 text-sm font-medium text-rose-200 transition hover:bg-rose-500/20"
+            className="inline-flex items-center gap-2 rounded-full border border-rose-500/20 bg-rose-500/10 px-4 py-2 text-sm font-medium text-rose-600 transition hover:bg-rose-500/20 dark:text-rose-200"
           >
             <Trash2 className="h-4 w-4" />
             Delete
@@ -96,7 +97,7 @@ export function NutritionCrud({ meals }: NutritionCrudProps) {
     [meals, selectedMealId],
   );
 
-  const form = useForm<NutritionFormValues>({
+  const form = useForm<z.input<typeof nutritionFormSchema>, z.input<typeof nutritionFormSchema>, z.output<typeof nutritionFormSchema>>({
     resolver: zodResolver(nutritionFormSchema),
     defaultValues: {
       id: "",
@@ -208,15 +209,15 @@ export function NutritionCrud({ meals }: NutritionCrudProps) {
 
   return (
     <div className="space-y-6">
-      <section className="rounded-[2rem] border border-white/10 bg-[linear-gradient(135deg,rgba(8,15,32,0.92),rgba(15,23,42,0.62))] p-6 shadow-2xl shadow-black/30 sm:p-8">
+      <section className="rounded-[2rem] border border-border bg-white/90 p-6 shadow-xl shadow-slate-200/70 dark:bg-[linear-gradient(135deg,rgba(8,15,32,0.92),rgba(15,23,42,0.62))] dark:shadow-black/30 sm:p-8">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div className="space-y-4">
-            <span className="inline-flex w-fit rounded-full border border-cyan-400/20 bg-cyan-400/10 px-4 py-2 text-xs font-medium uppercase tracking-[0.22em] text-cyan-200">
+            <span className="inline-flex w-fit rounded-full border border-cyan-400/20 bg-cyan-400/10 px-4 py-2 text-xs font-medium uppercase tracking-[0.22em] text-cyan-600 dark:text-cyan-200">
               Nutrition module
             </span>
             <div className="space-y-2">
-              <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">Track meals with precision and consistency.</h2>
-              <p className="max-w-2xl text-sm leading-7 text-slate-300 sm:text-base">
+              <h2 className="text-3xl font-semibold tracking-tight text-text-primary sm:text-4xl">Track meals with precision and consistency.</h2>
+              <p className="max-w-2xl text-sm leading-7 text-text-secondary sm:text-base">
                 Add, edit, and manage meals with a premium dark interface built for the rest of the fitness tracker.
               </p>
             </div>
@@ -231,17 +232,17 @@ export function NutritionCrud({ meals }: NutritionCrudProps) {
       </section>
 
       <section className="grid gap-6 xl:grid-cols-[minmax(0,0.94fr)_minmax(0,1.06fr)]">
-        <div className="rounded-[2rem] border border-white/10 bg-white/5 p-6 backdrop-blur-xl sm:p-8">
+        <div className="rounded-[2rem] border border-border bg-card p-6 backdrop-blur-xl sm:p-8">
           <div className="flex items-center justify-between gap-4">
             <div>
-              <p className="text-xs uppercase tracking-[0.22em] text-cyan-200/80">
+              <p className="text-xs uppercase tracking-[0.22em] text-cyan-600 dark:text-cyan-200/80">
                 {selectedMeal ? "Edit meal" : "Add meal"}
               </p>
-              <h3 className="mt-2 text-xl font-semibold text-white">
+              <h3 className="mt-2 text-xl font-semibold text-text-primary">
                 {selectedMeal ? "Update nutrition entry" : "Log a new meal"}
               </h3>
             </div>
-            <div className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-slate-300">
+            <div className="rounded-full border border-border bg-card px-3 py-1 text-xs font-medium text-text-secondary">
               {isPending ? "Saving" : selectedMeal ? "Editing" : "Creating"}
             </div>
           </div>
@@ -250,90 +251,90 @@ export function NutritionCrud({ meals }: NutritionCrudProps) {
             <input type="hidden" {...form.register("id")} />
 
             <div className="grid gap-4 sm:grid-cols-2">
-              <label className="space-y-2 text-sm text-slate-300 sm:col-span-2">
+              <label className="space-y-2 text-sm text-text-secondary sm:col-span-2">
                 <span>Meal name</span>
                 <input
                   {...form.register("name")}
                   placeholder="Grilled chicken bowl"
-                  className="w-full rounded-2xl border border-white/10 bg-slate-950/60 px-4 py-3 text-white outline-none transition placeholder:text-slate-500 focus:border-cyan-400/40"
+                  className="w-full rounded-2xl border border-border bg-card px-4 py-3 text-text-primary outline-none transition placeholder:text-text-muted focus:border-cyan-400/40"
                 />
-                {form.formState.errors.name ? <p className="text-xs text-rose-300">{form.formState.errors.name.message}</p> : null}
+                {form.formState.errors.name ? <p className="text-xs text-rose-500">{form.formState.errors.name.message}</p> : null}
               </label>
 
-              <label className="space-y-2 text-sm text-slate-300">
+              <label className="space-y-2 text-sm text-text-secondary">
                 <span>Meal type</span>
                 <select
                   {...form.register("type")}
-                  className="w-full rounded-2xl border border-white/10 bg-slate-950/60 px-4 py-3 text-white outline-none transition focus:border-cyan-400/40"
+                  className="w-full rounded-2xl border border-border bg-card px-4 py-3 text-text-primary outline-none transition focus:border-cyan-400/40"
                 >
                   <option value="BREAKFAST">Breakfast</option>
                   <option value="LUNCH">Lunch</option>
                   <option value="DINNER">Dinner</option>
                   <option value="SNACK">Snack</option>
                 </select>
-                {form.formState.errors.type ? <p className="text-xs text-rose-300">{form.formState.errors.type.message}</p> : null}
+                {form.formState.errors.type ? <p className="text-xs text-rose-500">{form.formState.errors.type.message}</p> : null}
               </label>
 
-              <label className="space-y-2 text-sm text-slate-300">
+              <label className="space-y-2 text-sm text-text-secondary">
                 <span>Date and time</span>
                 <input
                   {...form.register("eatenAt")}
                   type="datetime-local"
-                  className="w-full rounded-2xl border border-white/10 bg-slate-950/60 px-4 py-3 text-white outline-none transition focus:border-cyan-400/40"
+                  className="w-full rounded-2xl border border-border bg-card px-4 py-3 text-text-primary outline-none transition focus:border-cyan-400/40"
                 />
-                {form.formState.errors.eatenAt ? <p className="text-xs text-rose-300">{form.formState.errors.eatenAt.message}</p> : null}
+                {form.formState.errors.eatenAt ? <p className="text-xs text-rose-500">{form.formState.errors.eatenAt.message}</p> : null}
               </label>
 
-              <label className="space-y-2 text-sm text-slate-300">
+              <label className="space-y-2 text-sm text-text-secondary">
                 <span>Calories</span>
                 <input
                   {...form.register("calories")}
                   type="number"
                   min="0"
-                  className="w-full rounded-2xl border border-white/10 bg-slate-950/60 px-4 py-3 text-white outline-none transition focus:border-cyan-400/40"
+                  className="w-full rounded-2xl border border-border bg-card px-4 py-3 text-text-primary outline-none transition focus:border-cyan-400/40"
                 />
-                {form.formState.errors.calories ? <p className="text-xs text-rose-300">{form.formState.errors.calories.message}</p> : null}
+                {form.formState.errors.calories ? <p className="text-xs text-rose-500">{form.formState.errors.calories.message}</p> : null}
               </label>
 
-              <label className="space-y-2 text-sm text-slate-300">
+              <label className="space-y-2 text-sm text-text-secondary">
                 <span>Protein (g)</span>
                 <input
                   {...form.register("proteinGrams")}
                   type="number"
                   min="0"
                   step="0.1"
-                  className="w-full rounded-2xl border border-white/10 bg-slate-950/60 px-4 py-3 text-white outline-none transition focus:border-cyan-400/40"
+                  className="w-full rounded-2xl border border-border bg-card px-4 py-3 text-text-primary outline-none transition focus:border-cyan-400/40"
                 />
-                {form.formState.errors.proteinGrams ? <p className="text-xs text-rose-300">{form.formState.errors.proteinGrams.message}</p> : null}
+                {form.formState.errors.proteinGrams ? <p className="text-xs text-rose-500">{form.formState.errors.proteinGrams.message}</p> : null}
               </label>
 
-              <label className="space-y-2 text-sm text-slate-300">
+              <label className="space-y-2 text-sm text-text-secondary">
                 <span>Carbs (g)</span>
                 <input
                   {...form.register("carbsGrams")}
                   type="number"
                   min="0"
                   step="0.1"
-                  className="w-full rounded-2xl border border-white/10 bg-slate-950/60 px-4 py-3 text-white outline-none transition focus:border-cyan-400/40"
+                  className="w-full rounded-2xl border border-border bg-card px-4 py-3 text-text-primary outline-none transition focus:border-cyan-400/40"
                 />
-                {form.formState.errors.carbsGrams ? <p className="text-xs text-rose-300">{form.formState.errors.carbsGrams.message}</p> : null}
+                {form.formState.errors.carbsGrams ? <p className="text-xs text-rose-500">{form.formState.errors.carbsGrams.message}</p> : null}
               </label>
 
-              <label className="space-y-2 text-sm text-slate-300">
+              <label className="space-y-2 text-sm text-text-secondary">
                 <span>Fat (g)</span>
                 <input
                   {...form.register("fatGrams")}
                   type="number"
                   min="0"
                   step="0.1"
-                  className="w-full rounded-2xl border border-white/10 bg-slate-950/60 px-4 py-3 text-white outline-none transition focus:border-cyan-400/40"
+                  className="w-full rounded-2xl border border-border bg-card px-4 py-3 text-text-primary outline-none transition focus:border-cyan-400/40"
                 />
-                {form.formState.errors.fatGrams ? <p className="text-xs text-rose-300">{form.formState.errors.fatGrams.message}</p> : null}
+                {form.formState.errors.fatGrams ? <p className="text-xs text-rose-500">{form.formState.errors.fatGrams.message}</p> : null}
               </label>
             </div>
 
             {serverMessage ? (
-              <p className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-200">{serverMessage}</p>
+              <p className="rounded-2xl border border-border bg-card px-4 py-3 text-sm text-text-secondary">{serverMessage}</p>
             ) : null}
 
             <div className="flex flex-wrap gap-3">
@@ -360,7 +361,7 @@ export function NutritionCrud({ meals }: NutritionCrudProps) {
                       eatenAt: "",
                     });
                   }}
-                  className="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-5 py-3 text-sm font-medium text-white transition hover:bg-white/10"
+                  className="inline-flex items-center justify-center rounded-full border border-border bg-card px-5 py-3 text-sm font-medium text-text-primary transition hover:bg-secondary/70"
                 >
                   <Plus className="mr-2 h-4 w-4" />
                   New entry
@@ -370,20 +371,20 @@ export function NutritionCrud({ meals }: NutritionCrudProps) {
           </form>
         </div>
 
-        <div className="rounded-[2rem] border border-white/10 bg-white/5 p-6 backdrop-blur-xl sm:p-8">
+        <div className="rounded-[2rem] border border-border bg-card p-6 backdrop-blur-xl sm:p-8">
           <div className="flex items-center justify-between gap-4">
             <div>
-              <p className="text-xs uppercase tracking-[0.22em] text-cyan-200/80">Meal log</p>
-              <h3 className="mt-2 text-xl font-semibold text-white">Recent meals</h3>
+              <p className="text-xs uppercase tracking-[0.22em] text-cyan-600 dark:text-cyan-200/80">Meal log</p>
+              <h3 className="mt-2 text-xl font-semibold text-text-primary">Recent meals</h3>
             </div>
-            <div className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-slate-300">
+            <div className="rounded-full border border-border bg-card px-3 py-1 text-xs font-medium text-text-secondary">
               {meals.length} total
             </div>
           </div>
 
           <div className="mt-6 space-y-3">
             {meals.length === 0 ? (
-              <div className="rounded-[1.5rem] border border-white/10 bg-slate-950/60 p-5 text-sm text-slate-300">
+              <div className="rounded-[1.5rem] border border-border bg-secondary/60 p-5 text-sm text-text-secondary">
                 No meals logged yet. Add the first nutrition entry to start tracking.
               </div>
             ) : (

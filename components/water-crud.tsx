@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { useRouter } from "next/navigation";
 import { CalendarDays, Clock3, Droplets, PencilLine, Plus, Target, Trash2 } from "lucide-react";
 import { createWaterIntake, deleteWaterIntake, quickAddWaterIntake, updateWaterGoal, updateWaterIntake } from "@/actions/water-actions";
@@ -19,13 +20,13 @@ const quickAddAmounts = [250, 500, 750, 1000];
 
 function MetricCard({ label, value, icon: Icon }: { label: string; value: string; icon: LucideIcon }) {
   return (
-    <div className="rounded-[1.75rem] border border-white/10 bg-white/5 p-5 backdrop-blur-xl">
+    <div className="rounded-[1.75rem] border border-border bg-card p-5 backdrop-blur-xl">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-sm text-slate-400">{label}</p>
-          <p className="mt-2 text-2xl font-semibold text-white">{value}</p>
+          <p className="text-sm text-text-secondary">{label}</p>
+          <p className="mt-2 text-2xl font-semibold text-text-primary">{value}</p>
         </div>
-        <div className="rounded-2xl border border-cyan-400/20 bg-cyan-400/10 p-3 text-cyan-300">
+        <div className="rounded-2xl border border-cyan-400/20 bg-cyan-400/10 p-3 text-cyan-600 dark:text-cyan-300">
           <Icon className="h-5 w-5" />
         </div>
       </div>
@@ -47,14 +48,14 @@ function ProgressRing({ progress }: { progress: number }) {
           cx={size / 2}
           cy={size / 2}
           r={radius}
-          className="fill-none stroke-white/10"
+          className="fill-none stroke-slate-300/50 dark:stroke-white/10"
           strokeWidth={strokeWidth}
         />
         <circle
           cx={size / 2}
           cy={size / 2}
           r={radius}
-          className="fill-none stroke-cyan-300 drop-shadow-[0_0_20px_rgba(103,232,249,0.35)]"
+          className="fill-none stroke-cyan-500 drop-shadow-[0_0_20px_rgba(103,232,249,0.35)] dark:stroke-cyan-300"
           strokeDasharray={circumference}
           strokeDashoffset={dashOffset}
           strokeLinecap="round"
@@ -62,8 +63,8 @@ function ProgressRing({ progress }: { progress: number }) {
         />
       </svg>
       <div className="absolute text-center">
-        <p className="text-3xl font-semibold tracking-tight text-white">{progress}%</p>
-        <p className="mt-1 text-xs uppercase tracking-[0.22em] text-slate-400">Goal reached</p>
+        <p className="text-3xl font-semibold tracking-tight text-text-primary">{progress}%</p>
+        <p className="mt-1 text-xs uppercase tracking-[0.22em] text-text-secondary">Goal reached</p>
       </div>
     </div>
   );
@@ -81,18 +82,18 @@ function WaterEntryRow({
   onDelete: (id: string) => void;
 }) {
   return (
-    <div className={`rounded-[1.5rem] border p-5 ${isSelected ? "border-cyan-400/30 bg-cyan-400/5" : "border-white/10 bg-slate-950/60"}`}>
+    <div className={`rounded-[1.5rem] border p-5 ${isSelected ? "border-cyan-400/30 bg-cyan-400/5" : "border-border bg-card"}`}>
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="space-y-3">
           <div className="flex flex-wrap items-center gap-3">
-            <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium uppercase tracking-[0.18em] text-cyan-200/80">
+            <span className="rounded-full border border-border bg-secondary/70 px-3 py-1 text-xs font-medium uppercase tracking-[0.18em] text-cyan-600 dark:text-cyan-200/80">
               Water
             </span>
-            <span className="text-xs uppercase tracking-[0.18em] text-slate-400">{new Date(entry.takenAt).toLocaleString()}</span>
+            <span className="text-xs uppercase tracking-[0.18em] text-text-secondary">{new Date(entry.takenAt).toLocaleString()}</span>
           </div>
           <div>
-            <h4 className="text-lg font-semibold text-white">{entry.amountMl} ml</h4>
-            <p className="mt-1 text-sm text-slate-300">Logged hydration intake</p>
+            <h4 className="text-lg font-semibold text-text-primary">{entry.amountMl} ml</h4>
+            <p className="mt-1 text-sm text-text-secondary">Logged hydration intake</p>
           </div>
         </div>
 
@@ -100,7 +101,7 @@ function WaterEntryRow({
           <button
             type="button"
             onClick={() => onEdit(entry)}
-            className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-white transition hover:bg-white/10"
+            className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm font-medium text-text-primary transition hover:bg-secondary/70"
           >
             <PencilLine className="h-4 w-4" />
             Edit
@@ -108,7 +109,7 @@ function WaterEntryRow({
           <button
             type="button"
             onClick={() => onDelete(entry.id)}
-            className="inline-flex items-center gap-2 rounded-full border border-rose-500/20 bg-rose-500/10 px-4 py-2 text-sm font-medium text-rose-200 transition hover:bg-rose-500/20"
+            className="inline-flex items-center gap-2 rounded-full border border-rose-500/20 bg-rose-500/10 px-4 py-2 text-sm font-medium text-rose-600 transition hover:bg-rose-500/20 dark:text-rose-200"
           >
             <Trash2 className="h-4 w-4" />
             Delete
@@ -130,7 +131,7 @@ export function WaterCrud({ entries, goalMl }: WaterCrudProps) {
     [entries, selectedEntryId],
   );
 
-  const entryForm = useForm<WaterEntryFormValues>({
+  const entryForm = useForm<z.input<typeof waterEntrySchema>, z.input<typeof waterEntrySchema>, z.output<typeof waterEntrySchema>>({
     resolver: zodResolver(waterEntrySchema),
     defaultValues: {
       id: "",
@@ -139,7 +140,7 @@ export function WaterCrud({ entries, goalMl }: WaterCrudProps) {
     },
   });
 
-  const goalForm = useForm<WaterGoalFormValues>({
+  const goalForm = useForm<z.input<typeof waterGoalSchema>, z.input<typeof waterGoalSchema>, z.output<typeof waterGoalSchema>>({
     resolver: zodResolver(waterGoalSchema),
     defaultValues: {
       goalMl,
@@ -276,15 +277,15 @@ export function WaterCrud({ entries, goalMl }: WaterCrudProps) {
 
   return (
     <div className="space-y-6">
-      <section className="rounded-[2rem] border border-white/10 bg-[linear-gradient(135deg,rgba(8,15,32,0.92),rgba(15,23,42,0.62))] p-6 shadow-2xl shadow-black/30 sm:p-8">
+      <section className="rounded-[2rem] border border-border bg-white/90 p-6 shadow-xl shadow-slate-200/70 dark:bg-[linear-gradient(135deg,rgba(8,15,32,0.92),rgba(15,23,42,0.62))] dark:shadow-black/30 sm:p-8">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div className="space-y-4">
-            <span className="inline-flex w-fit rounded-full border border-cyan-400/20 bg-cyan-400/10 px-4 py-2 text-xs font-medium uppercase tracking-[0.22em] text-cyan-200">
+            <span className="inline-flex w-fit rounded-full border border-cyan-400/20 bg-cyan-400/10 px-4 py-2 text-xs font-medium uppercase tracking-[0.22em] text-cyan-600 dark:text-cyan-200">
               Water intake module
             </span>
             <div className="space-y-2">
-              <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">Stay hydrated with a clean daily tracker.</h2>
-              <p className="max-w-2xl text-sm leading-7 text-slate-300 sm:text-base">
+              <h2 className="text-3xl font-semibold tracking-tight text-text-primary sm:text-4xl">Stay hydrated with a clean daily tracker.</h2>
+              <p className="max-w-2xl text-sm leading-7 text-text-secondary sm:text-base">
                 Log water intake, adjust your daily goal, and monitor your progress in the same premium dashboard style used across the app.
               </p>
             </div>
@@ -300,13 +301,13 @@ export function WaterCrud({ entries, goalMl }: WaterCrudProps) {
       </section>
 
       <section className="grid gap-6 xl:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)]">
-        <div className="space-y-6 rounded-[2rem] border border-white/10 bg-white/5 p-6 backdrop-blur-xl sm:p-8">
+        <div className="space-y-6 rounded-[2rem] border border-border bg-card p-6 backdrop-blur-xl sm:p-8">
           <div className="flex items-center justify-between gap-4">
             <div>
-              <p className="text-xs uppercase tracking-[0.22em] text-cyan-200/80">Daily target</p>
-              <h3 className="mt-2 text-xl font-semibold text-white">Water goal progress</h3>
+              <p className="text-xs uppercase tracking-[0.22em] text-cyan-600 dark:text-cyan-200/80">Daily target</p>
+              <h3 className="mt-2 text-xl font-semibold text-text-primary">Water goal progress</h3>
             </div>
-            <div className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-slate-300">
+            <div className="rounded-full border border-border bg-card px-3 py-1 text-xs font-medium text-text-secondary">
               {goalMl} ml goal
             </div>
           </div>
@@ -316,17 +317,17 @@ export function WaterCrud({ entries, goalMl }: WaterCrudProps) {
               <ProgressRing progress={progressPercent} />
             </div>
 
-            <div className="space-y-4 rounded-[1.5rem] border border-white/10 bg-slate-950/60 p-5">
+            <div className="space-y-4 rounded-[1.5rem] border border-border bg-secondary/60 p-5">
               <form onSubmit={handleGoalSubmit} className="space-y-4">
-                <label className="space-y-2 text-sm text-slate-300">
+                <label className="space-y-2 text-sm text-text-secondary">
                   <span>Daily water goal (ml)</span>
                   <input
                     {...goalForm.register("goalMl")}
                     type="number"
                     min="1"
-                    className="w-full rounded-2xl border border-white/10 bg-slate-950/60 px-4 py-3 text-white outline-none transition focus:border-cyan-400/40"
+                    className="w-full rounded-2xl border border-border bg-card px-4 py-3 text-text-primary outline-none transition focus:border-cyan-400/40"
                   />
-                  {goalForm.formState.errors.goalMl ? <p className="text-xs text-rose-300">{goalForm.formState.errors.goalMl.message}</p> : null}
+                  {goalForm.formState.errors.goalMl ? <p className="text-xs text-rose-500">{goalForm.formState.errors.goalMl.message}</p> : null}
                 </label>
 
                 <div className="flex flex-wrap gap-3">
@@ -346,7 +347,7 @@ export function WaterCrud({ entries, goalMl }: WaterCrudProps) {
                     key={amount}
                     type="button"
                     onClick={() => handleQuickAdd(amount)}
-                    className="inline-flex items-center justify-center rounded-2xl border border-cyan-400/20 bg-cyan-400/10 px-4 py-3 text-sm font-medium text-cyan-100 transition hover:bg-cyan-400/20"
+                    className="inline-flex items-center justify-center rounded-2xl border border-cyan-400/20 bg-cyan-400/10 px-4 py-3 text-sm font-medium text-cyan-700 transition hover:bg-cyan-400/20 dark:text-cyan-100"
                   >
                     <Plus className="mr-2 h-4 w-4" />
                     Quick add {amount} ml
@@ -354,17 +355,17 @@ export function WaterCrud({ entries, goalMl }: WaterCrudProps) {
                 ))}
               </div>
 
-              <div className="rounded-[1.25rem] border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-300">
+              <div className="rounded-[1.25rem] border border-border bg-card px-4 py-3 text-sm text-text-secondary">
                 You&apos;ve consumed {todayTotal} ml today. {remainingMl} ml left to hit your target.
               </div>
             </div>
           </div>
 
-          <div className="rounded-[1.5rem] border border-white/10 bg-slate-950/60 p-5">
+          <div className="rounded-[1.5rem] border border-border bg-secondary/60 p-5">
             <div className="flex items-center justify-between gap-4">
               <div>
-                <p className="text-sm text-slate-400">Recent days</p>
-                <h4 className="mt-1 text-lg font-semibold text-white">Seven-day intake history</h4>
+                <p className="text-sm text-text-secondary">Recent days</p>
+                <h4 className="mt-1 text-lg font-semibold text-text-primary">Seven-day intake history</h4>
               </div>
             </div>
 
@@ -374,15 +375,15 @@ export function WaterCrud({ entries, goalMl }: WaterCrudProps) {
 
                 return (
                   <div key={day.label} className="space-y-3 text-center">
-                    <div className="flex h-44 items-end rounded-[1.25rem] bg-white/5 p-2">
+                    <div className="flex h-44 items-end rounded-[1.25rem] bg-card p-2">
                       <div
                         className="w-full rounded-[0.9rem] bg-gradient-to-t from-cyan-500 via-sky-400 to-blue-400"
                         style={{ height: `${Math.max(percent, 8)}%` }}
                       />
                     </div>
                     <div>
-                      <p className="text-xs uppercase tracking-[0.18em] text-slate-400">{day.label}</p>
-                      <p className="mt-1 text-sm font-medium text-white">{day.amountMl} ml</p>
+                      <p className="text-xs uppercase tracking-[0.18em] text-text-secondary">{day.label}</p>
+                      <p className="mt-1 text-sm font-medium text-text-primary">{day.amountMl} ml</p>
                     </div>
                   </div>
                 );
@@ -391,41 +392,41 @@ export function WaterCrud({ entries, goalMl }: WaterCrudProps) {
           </div>
         </div>
 
-        <div className="space-y-6 rounded-[2rem] border border-white/10 bg-white/5 p-6 backdrop-blur-xl sm:p-8">
+        <div className="space-y-6 rounded-[2rem] border border-border bg-card p-6 backdrop-blur-xl sm:p-8">
           <div>
-            <p className="text-xs uppercase tracking-[0.22em] text-cyan-200/80">History</p>
-            <h3 className="mt-2 text-xl font-semibold text-white">Today&apos;s water log</h3>
+            <p className="text-xs uppercase tracking-[0.22em] text-cyan-600 dark:text-cyan-200/80">History</p>
+            <h3 className="mt-2 text-xl font-semibold text-text-primary">Today&apos;s water log</h3>
           </div>
 
-          <form onSubmit={handleEntrySubmit} className="rounded-[1.5rem] border border-white/10 bg-slate-950/60 p-5">
+          <form onSubmit={handleEntrySubmit} className="rounded-[1.5rem] border border-border bg-secondary/60 p-5">
             <input type="hidden" {...entryForm.register("id")} />
 
             <div className="grid gap-4 sm:grid-cols-2">
-              <label className="space-y-2 text-sm text-slate-300 sm:col-span-2">
+              <label className="space-y-2 text-sm text-text-secondary sm:col-span-2">
                 <span>Amount (ml)</span>
                 <input
                   {...entryForm.register("amountMl")}
                   type="number"
                   min="1"
-                  className="w-full rounded-2xl border border-white/10 bg-slate-950/60 px-4 py-3 text-white outline-none transition focus:border-cyan-400/40"
+                  className="w-full rounded-2xl border border-border bg-card px-4 py-3 text-text-primary outline-none transition focus:border-cyan-400/40"
                 />
-                {entryForm.formState.errors.amountMl ? <p className="text-xs text-rose-300">{entryForm.formState.errors.amountMl.message}</p> : null}
+                {entryForm.formState.errors.amountMl ? <p className="text-xs text-rose-500">{entryForm.formState.errors.amountMl.message}</p> : null}
               </label>
 
-              <label className="space-y-2 text-sm text-slate-300 sm:col-span-2">
+              <label className="space-y-2 text-sm text-text-secondary sm:col-span-2">
                 <span>Date and time</span>
                 <input
                   {...entryForm.register("takenAt")}
                   type="datetime-local"
-                  className="w-full rounded-2xl border border-white/10 bg-slate-950/60 px-4 py-3 text-white outline-none transition focus:border-cyan-400/40"
+                  className="w-full rounded-2xl border border-border bg-card px-4 py-3 text-text-primary outline-none transition focus:border-cyan-400/40"
                 />
-                {entryForm.formState.errors.takenAt ? <p className="text-xs text-rose-300">{entryForm.formState.errors.takenAt.message}</p> : null}
+                {entryForm.formState.errors.takenAt ? <p className="text-xs text-rose-500">{entryForm.formState.errors.takenAt.message}</p> : null}
               </label>
             </div>
 
-            {message ? <p className="mt-4 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-200">{message}</p> : null}
+            {message ? <p className="mt-4 rounded-2xl border border-border bg-card px-4 py-3 text-sm text-text-secondary">{message}</p> : null}
 
-            <div className="mt-4 flex flex-wrap gap-3">
+            <div className="mt-5 flex flex-wrap gap-3">
               <button
                 type="submit"
                 disabled={isPending}
@@ -438,14 +439,11 @@ export function WaterCrud({ entries, goalMl }: WaterCrudProps) {
                   type="button"
                   onClick={() => {
                     setSelectedEntryId(null);
-                    entryForm.reset({
-                      id: "",
-                      amountMl: 250,
-                      takenAt: "",
-                    });
+                    entryForm.reset({ id: "", amountMl: 250, takenAt: "" });
                   }}
-                  className="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-5 py-3 text-sm font-medium text-white transition hover:bg-white/10"
+                  className="inline-flex items-center justify-center rounded-full border border-border bg-card px-5 py-3 text-sm font-medium text-text-primary transition hover:bg-secondary/70"
                 >
+                  <Plus className="mr-2 h-4 w-4" />
                   New entry
                 </button>
               ) : null}
@@ -453,12 +451,12 @@ export function WaterCrud({ entries, goalMl }: WaterCrudProps) {
           </form>
 
           <div className="space-y-3">
-            {todayEntries.length === 0 ? (
-              <div className="rounded-[1.5rem] border border-white/10 bg-slate-950/60 p-5 text-sm text-slate-300">
-                No water entries logged today. Use a quick add button or create the first entry.
+            {entries.length === 0 ? (
+              <div className="rounded-[1.5rem] border border-border bg-secondary/60 p-5 text-sm text-text-secondary">
+                No water entries yet. Add your first hydration reminder and start building a daily routine.
               </div>
             ) : (
-              todayEntries.map((entry) => (
+              entries.map((entry) => (
                 <WaterEntryRow
                   key={entry.id}
                   entry={entry}

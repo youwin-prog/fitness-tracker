@@ -10,9 +10,9 @@ export default async function NutritionPage() {
     name: meal.name,
     type: meal.type,
     calories: meal.calories,
-    proteinGrams: meal.proteinGrams.toString(),
-    carbsGrams: meal.carbsGrams.toString(),
-    fatGrams: meal.fatGrams.toString(),
+    proteinGrams: (meal.proteinGrams ?? 0).toString(),
+    carbsGrams: (meal.carbsGrams ?? 0).toString(),
+    fatGrams: (meal.fatGrams ?? 0).toString(),
     eatenAt: meal.eatenAt.toISOString(),
   }));
 

@@ -1,4 +1,4 @@
-"use client";
+ "use client";
 
 import {
   Area,
@@ -103,17 +103,17 @@ function AnalyticsCard({
   children: ReactNode;
 }) {
   return (
-    <section className="rounded-[2rem] border border-white/10 bg-[linear-gradient(135deg,rgba(8,15,32,0.92),rgba(15,23,42,0.62))] p-6 shadow-2xl shadow-black/25 backdrop-blur-xl sm:p-7">
+    <section className="rounded-[2rem] border border-border bg-white/90 p-6 shadow-xl shadow-slate-200/70 backdrop-blur-xl dark:bg-[linear-gradient(135deg,rgba(8,15,32,0.92),rgba(15,23,42,0.62))] dark:shadow-black/25 sm:p-7">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-xs uppercase tracking-[0.24em] text-cyan-200/80">{eyebrow}</p>
-          <h2 className="mt-2 text-xl font-semibold text-white">{title}</h2>
+          <p className="text-xs uppercase tracking-[0.24em] text-cyan-600 dark:text-cyan-200/80">{eyebrow}</p>
+          <h2 className="mt-2 text-xl font-semibold text-text-primary">{title}</h2>
         </div>
-        <div className="rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 py-1 text-xs font-medium text-cyan-100">
+        <div className="rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 py-1 text-xs font-medium text-cyan-600 dark:text-cyan-100">
           {value}
         </div>
       </div>
-      <p className="mt-3 text-sm leading-6 text-slate-300">{detail}</p>
+      <p className="mt-3 text-sm leading-6 text-text-secondary">{detail}</p>
       <div className="mt-5">{children}</div>
     </section>
   );
@@ -121,9 +121,9 @@ function AnalyticsCard({
 
 function StatPill({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
-      <p className="text-xs uppercase tracking-[0.18em] text-slate-400">{label}</p>
-      <p className="mt-1 text-lg font-semibold text-white">{value}</p>
+    <div className="rounded-2xl border border-border bg-card px-4 py-3">
+      <p className="text-xs uppercase tracking-[0.18em] text-text-secondary">{label}</p>
+      <p className="mt-1 text-lg font-semibold text-text-primary">{value}</p>
     </div>
   );
 }
@@ -132,8 +132,8 @@ function SectionHeader({ title, subtitle }: { title: string; subtitle: string })
   return (
     <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
       <div>
-        <h3 className="text-lg font-semibold text-white">{title}</h3>
-        <p className="mt-1 text-sm text-slate-400">{subtitle}</p>
+        <h3 className="text-lg font-semibold text-text-primary">{title}</h3>
+        <p className="mt-1 text-sm text-text-secondary">{subtitle}</p>
       </div>
     </div>
   );
@@ -166,15 +166,15 @@ export function AnalyticsDashboard({
 
   return (
     <div className="space-y-6">
-      <section className="rounded-[2.25rem] border border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(34,211,238,0.16),transparent_35%),linear-gradient(135deg,rgba(8,15,32,0.96),rgba(15,23,42,0.74))] p-6 shadow-2xl shadow-black/30 sm:p-8">
+      <section className="rounded-[2.25rem] border border-border bg-white/90 p-6 shadow-xl shadow-slate-200/70 dark:bg-[radial-gradient(circle_at_top_left,rgba(34,211,238,0.16),transparent_35%),linear-gradient(135deg,rgba(8,15,32,0.96),rgba(15,23,42,0.74))] dark:shadow-black/30 sm:p-8">
         <div className="flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">
           <div className="space-y-4">
-            <span className="inline-flex w-fit rounded-full border border-cyan-400/20 bg-cyan-400/10 px-4 py-2 text-xs font-medium uppercase tracking-[0.24em] text-cyan-200">
+            <span className="inline-flex w-fit rounded-full border border-cyan-400/20 bg-cyan-400/10 px-4 py-2 text-xs font-medium uppercase tracking-[0.24em] text-cyan-600 dark:text-cyan-200">
               Analytics
             </span>
             <div className="space-y-2">
-              <h1 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">Performance at a glance</h1>
-              <p className="max-w-2xl text-sm leading-7 text-slate-300 sm:text-base">
+              <h1 className="text-3xl font-semibold tracking-tight text-text-primary sm:text-4xl">Performance at a glance</h1>
+              <p className="max-w-2xl text-sm leading-7 text-text-secondary sm:text-base">
                 Review training load, bodyweight trends, nutrition, hydration, recovery, and goal progress in one responsive dashboard.
               </p>
             </div>

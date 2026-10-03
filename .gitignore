@@ -5,3 +5,14 @@ coverage
 .env.local
 .env.*.local
 .DS_Store
+
+# clerk configuration (can include secrets)
+/.clerk/
+# Local development/debug artifacts
+build_goal.txt
+errors.txt
+log.txt
+readme_fix_summary.txt
+readme_inspection.txt
+txt.txt
+tsconfig.tsbuildinfo

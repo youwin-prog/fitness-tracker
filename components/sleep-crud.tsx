@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts";
 import { BedDouble, CalendarDays, MoonStar, PencilLine, Plus, Star, Trash2 } from "lucide-react";
 import { createSleepEntry, deleteSleepEntry, updateSleepEntry } from "@/actions/sleep-actions";
@@ -14,13 +15,13 @@ type SleepCrudProps = SleepModuleData;
 
 function MetricCard({ label, value, icon: Icon }: { label: string; value: string; icon: LucideIcon }) {
   return (
-    <div className="rounded-[1.75rem] border border-white/10 bg-white/5 p-5 backdrop-blur-xl">
+    <div className="rounded-[1.75rem] border border-border bg-card p-5 backdrop-blur-xl">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-sm text-slate-400">{label}</p>
-          <p className="mt-2 text-2xl font-semibold text-white">{value}</p>
+          <p className="text-sm text-text-secondary">{label}</p>
+          <p className="mt-2 text-2xl font-semibold text-text-primary">{value}</p>
         </div>
-        <div className="rounded-2xl border border-cyan-400/20 bg-cyan-400/10 p-3 text-cyan-300">
+        <div className="rounded-2xl border border-cyan-400/20 bg-cyan-400/10 p-3 text-cyan-600 dark:text-cyan-300">
           <Icon className="h-5 w-5" />
         </div>
       </div>
@@ -31,7 +32,7 @@ function MetricCard({ label, value, icon: Icon }: { label: string; value: string
 function ProgressPill({ quality }: { quality: number }) {
   const label = quality >= 4 ? "Excellent" : quality >= 3 ? "Good" : quality >= 2 ? "Fair" : "Low";
   return (
-    <span className="rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 py-1 text-xs font-medium text-cyan-200">{label}</span>
+    <span className="rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 py-1 text-xs font-medium text-cyan-600 dark:text-cyan-200">{label}</span>
   );
 }
 
@@ -47,19 +48,19 @@ function SleepHistoryRow({
   isSelected: boolean;
 }) {
   return (
-    <div className={`rounded-[1.5rem] border p-5 ${isSelected ? "border-cyan-400/30 bg-cyan-400/5" : "border-white/10 bg-slate-950/60"}`}>
+    <div className={`rounded-[1.5rem] border p-5 ${isSelected ? "border-cyan-400/30 bg-cyan-400/5" : "border-border bg-card"}`}>
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="space-y-3">
           <div className="flex flex-wrap items-center gap-3">
-            <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium uppercase tracking-[0.18em] text-cyan-200/80">
+            <span className="rounded-full border border-border bg-secondary/70 px-3 py-1 text-xs font-medium uppercase tracking-[0.18em] text-cyan-600 dark:text-cyan-200/80">
               Sleep
             </span>
-            <span className="text-xs uppercase tracking-[0.18em] text-slate-400">{new Date(entry.recordedAt).toLocaleString()}</span>
+            <span className="text-xs uppercase tracking-[0.18em] text-text-secondary">{new Date(entry.recordedAt).toLocaleString()}</span>
             <ProgressPill quality={entry.quality} />
           </div>
           <div>
-            <h4 className="text-lg font-semibold text-white">{entry.sleepHours.toFixed(1)} hours</h4>
-            <p className="mt-1 text-sm text-slate-300">Sleep quality {entry.quality}/5</p>
+            <h4 className="text-lg font-semibold text-text-primary">{entry.sleepHours.toFixed(1)} hours</h4>
+            <p className="mt-1 text-sm text-text-secondary">Sleep quality {entry.quality}/5</p>
           </div>
         </div>
 
@@ -67,7 +68,7 @@ function SleepHistoryRow({
           <button
             type="button"
             onClick={() => onEdit(entry)}
-            className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-white transition hover:bg-white/10"
+            className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm font-medium text-text-primary transition hover:bg-secondary/70"
           >
             <PencilLine className="h-4 w-4" />
             Edit
@@ -75,7 +76,7 @@ function SleepHistoryRow({
           <button
             type="button"
             onClick={() => onDelete(entry.id)}
-            className="inline-flex items-center gap-2 rounded-full border border-rose-500/20 bg-rose-500/10 px-4 py-2 text-sm font-medium text-rose-200 transition hover:bg-rose-500/20"
+            className="inline-flex items-center gap-2 rounded-full border border-rose-500/20 bg-rose-500/10 px-4 py-2 text-sm font-medium text-rose-600 transition hover:bg-rose-500/20 dark:text-rose-200"
           >
             <Trash2 className="h-4 w-4" />
             Delete
@@ -96,7 +97,7 @@ export function SleepCrud({ entries }: SleepCrudProps) {
     [entries, selectedEntryId],
   );
 
-  const form = useForm<SleepEntryFormValues>({
+  const form = useForm<z.input<typeof sleepEntrySchema>, z.input<typeof sleepEntrySchema>, z.output<typeof sleepEntrySchema>>({
     resolver: zodResolver(sleepEntrySchema),
     defaultValues: {
       id: "",
@@ -196,15 +197,15 @@ export function SleepCrud({ entries }: SleepCrudProps) {
 
   return (
     <div className="space-y-6">
-      <section className="rounded-[2rem] border border-white/10 bg-[linear-gradient(135deg,rgba(8,15,32,0.92),rgba(15,23,42,0.62))] p-6 shadow-2xl shadow-black/30 sm:p-8">
+      <section className="rounded-[2rem] border border-border bg-white/90 p-6 shadow-xl shadow-slate-200/70 dark:bg-[linear-gradient(135deg,rgba(8,15,32,0.92),rgba(15,23,42,0.62))] dark:shadow-black/30 sm:p-8">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div className="space-y-4">
-            <span className="inline-flex w-fit rounded-full border border-cyan-400/20 bg-cyan-400/10 px-4 py-2 text-xs font-medium uppercase tracking-[0.22em] text-cyan-200">
+            <span className="inline-flex w-fit rounded-full border border-cyan-400/20 bg-cyan-400/10 px-4 py-2 text-xs font-medium uppercase tracking-[0.22em] text-cyan-600 dark:text-cyan-200">
               Sleep tracker
             </span>
             <div className="space-y-2">
-              <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">Log sleep, track recovery, and spot patterns.</h2>
-              <p className="max-w-2xl text-sm leading-7 text-slate-300 sm:text-base">
+              <h2 className="text-3xl font-semibold tracking-tight text-text-primary sm:text-4xl">Log sleep, track recovery, and spot patterns.</h2>
+              <p className="max-w-2xl text-sm leading-7 text-text-secondary sm:text-base">
                 Record daily sleep duration and quality, review today&apos;s summary, and keep an eye on your recent weekly sleep history.
               </p>
             </div>
@@ -220,17 +221,17 @@ export function SleepCrud({ entries }: SleepCrudProps) {
       </section>
 
       <section className="grid gap-6 xl:grid-cols-[minmax(0,0.94fr)_minmax(0,1.06fr)]">
-        <div className="rounded-[2rem] border border-white/10 bg-white/5 p-6 backdrop-blur-xl sm:p-8">
+        <div className="rounded-[2rem] border border-border bg-card p-6 backdrop-blur-xl sm:p-8">
           <div className="flex items-center justify-between gap-4">
             <div>
-              <p className="text-xs uppercase tracking-[0.22em] text-cyan-200/80">
+              <p className="text-xs uppercase tracking-[0.22em] text-cyan-600 dark:text-cyan-200/80">
                 {selectedEntry ? "Edit sleep entry" : "Add sleep entry"}
               </p>
-              <h3 className="mt-2 text-xl font-semibold text-white">
+              <h3 className="mt-2 text-xl font-semibold text-text-primary">
                 {selectedEntry ? "Update sleep log" : "Log today&apos;s sleep"}
               </h3>
             </div>
-            <div className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-slate-300">
+            <div className="rounded-full border border-border bg-card px-3 py-1 text-xs font-medium text-text-secondary">
               {isPending ? "Saving" : selectedEntry ? "Editing" : "Creating"}
             </div>
           </div>
@@ -239,23 +240,23 @@ export function SleepCrud({ entries }: SleepCrudProps) {
             <input type="hidden" {...form.register("id")} />
 
             <div className="grid gap-4 sm:grid-cols-2">
-              <label className="space-y-2 text-sm text-slate-300 sm:col-span-2">
+              <label className="space-y-2 text-sm text-text-secondary sm:col-span-2">
                 <span>Sleep duration (hours)</span>
                 <input
                   {...form.register("sleepHours")}
                   type="number"
                   min="0"
                   step="0.1"
-                  className="w-full rounded-2xl border border-white/10 bg-slate-950/60 px-4 py-3 text-white outline-none transition focus:border-cyan-400/40"
+                  className="w-full rounded-2xl border border-border bg-card px-4 py-3 text-text-primary outline-none transition focus:border-cyan-400/40"
                 />
-                {form.formState.errors.sleepHours ? <p className="text-xs text-rose-300">{form.formState.errors.sleepHours.message}</p> : null}
+                {form.formState.errors.sleepHours ? <p className="text-xs text-rose-500">{form.formState.errors.sleepHours.message}</p> : null}
               </label>
 
-              <label className="space-y-2 text-sm text-slate-300 sm:col-span-2">
+              <label className="space-y-2 text-sm text-text-secondary sm:col-span-2">
                 <span>Sleep quality</span>
                 <select
                   {...form.register("quality")}
-                  className="w-full rounded-2xl border border-white/10 bg-slate-950/60 px-4 py-3 text-white outline-none transition focus:border-cyan-400/40"
+                  className="w-full rounded-2xl border border-border bg-card px-4 py-3 text-text-primary outline-none transition focus:border-cyan-400/40"
                 >
                   <option value={1}>1 - Poor</option>
                   <option value={2}>2 - Fair</option>
@@ -263,21 +264,21 @@ export function SleepCrud({ entries }: SleepCrudProps) {
                   <option value={4}>4 - Great</option>
                   <option value={5}>5 - Excellent</option>
                 </select>
-                {form.formState.errors.quality ? <p className="text-xs text-rose-300">{form.formState.errors.quality.message}</p> : null}
+                {form.formState.errors.quality ? <p className="text-xs text-rose-500">{form.formState.errors.quality.message}</p> : null}
               </label>
 
-              <label className="space-y-2 text-sm text-slate-300 sm:col-span-2">
+              <label className="space-y-2 text-sm text-text-secondary sm:col-span-2">
                 <span>Date and time</span>
                 <input
                   {...form.register("recordedAt")}
                   type="datetime-local"
-                  className="w-full rounded-2xl border border-white/10 bg-slate-950/60 px-4 py-3 text-white outline-none transition focus:border-cyan-400/40"
+                  className="w-full rounded-2xl border border-border bg-card px-4 py-3 text-text-primary outline-none transition focus:border-cyan-400/40"
                 />
-                {form.formState.errors.recordedAt ? <p className="text-xs text-rose-300">{form.formState.errors.recordedAt.message}</p> : null}
+                {form.formState.errors.recordedAt ? <p className="text-xs text-rose-500">{form.formState.errors.recordedAt.message}</p> : null}
               </label>
             </div>
 
-            {message ? <p className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-200">{message}</p> : null}
+            {message ? <p className="rounded-2xl border border-border bg-card px-4 py-3 text-sm text-text-secondary">{message}</p> : null}
 
             <div className="flex flex-wrap gap-3">
               <button
@@ -294,7 +295,7 @@ export function SleepCrud({ entries }: SleepCrudProps) {
                     setSelectedEntryId(null);
                     form.reset({ id: "", sleepHours: 8, quality: 4, recordedAt: "" });
                   }}
-                  className="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-5 py-3 text-sm font-medium text-white transition hover:bg-white/10"
+                  className="inline-flex items-center justify-center rounded-full border border-border bg-card px-5 py-3 text-sm font-medium text-text-primary transition hover:bg-secondary/70"
                 >
                   <Plus className="mr-2 h-4 w-4" />
                   New entry
@@ -304,25 +305,25 @@ export function SleepCrud({ entries }: SleepCrudProps) {
           </form>
         </div>
 
-        <div className="space-y-6 rounded-[2rem] border border-white/10 bg-white/5 p-6 backdrop-blur-xl sm:p-8">
+        <div className="space-y-6 rounded-[2rem] border border-border bg-card p-6 backdrop-blur-xl sm:p-8">
           <div className="grid gap-4 sm:grid-cols-2">
-            <div className="rounded-[1.75rem] border border-white/10 bg-slate-950/60 p-5">
-              <p className="text-sm text-slate-400">Today&apos;s sleep summary</p>
-              <h4 className="mt-2 text-lg font-semibold text-white">{totalHoursToday.toFixed(1)} hours</h4>
-              <p className="mt-2 text-sm text-slate-300">Average quality {averageQualityToday}/5</p>
+            <div className="rounded-[1.75rem] border border-border bg-secondary/60 p-5">
+              <p className="text-sm text-text-secondary">Today&apos;s sleep summary</p>
+              <h4 className="mt-2 text-lg font-semibold text-text-primary">{totalHoursToday.toFixed(1)} hours</h4>
+              <p className="mt-2 text-sm text-text-secondary">Average quality {averageQualityToday}/5</p>
             </div>
-            <div className="rounded-[1.75rem] border border-white/10 bg-slate-950/60 p-5">
-              <p className="text-sm text-slate-400">Recovery insight</p>
-              <h4 className="mt-2 text-lg font-semibold text-white">{latestEntry ? `${latestEntry.sleepHours.toFixed(1)} hrs last night` : "No recent entry"}</h4>
-              <p className="mt-2 text-sm text-slate-300">Sleep quality influences overall readiness and training output.</p>
+            <div className="rounded-[1.75rem] border border-border bg-secondary/60 p-5">
+              <p className="text-sm text-text-secondary">Recovery insight</p>
+              <h4 className="mt-2 text-lg font-semibold text-text-primary">{latestEntry ? `${latestEntry.sleepHours.toFixed(1)} hrs last night` : "No recent entry"}</h4>
+              <p className="mt-2 text-sm text-text-secondary">Sleep quality influences overall readiness and training output.</p>
             </div>
           </div>
 
-          <div className="rounded-[1.75rem] border border-white/10 bg-slate-950/60 p-5">
+          <div className="rounded-[1.75rem] border border-border bg-secondary/60 p-5">
             <div className="mb-4 flex items-center justify-between gap-4">
               <div>
-                <p className="text-sm text-slate-400">Weekly history</p>
-                <h4 className="mt-1 text-lg font-semibold text-white">Sleep hours trend</h4>
+                <p className="text-sm text-text-secondary">Weekly history</p>
+                <h4 className="mt-1 text-lg font-semibold text-text-primary">Sleep hours trend</h4>
               </div>
             </div>
             <div className="h-80 w-full">
@@ -346,18 +347,18 @@ export function SleepCrud({ entries }: SleepCrudProps) {
             </div>
           </div>
 
-          <div className="rounded-[1.75rem] border border-white/10 bg-slate-950/60 p-5">
+          <div className="rounded-[1.75rem] border border-border bg-secondary/60 p-5">
             <div className="flex items-center justify-between gap-4">
               <div>
-                <p className="text-sm text-slate-400">Daily history</p>
-                <h4 className="mt-1 text-lg font-semibold text-white">Recent entries</h4>
+                <p className="text-sm text-text-secondary">Daily history</p>
+                <h4 className="mt-1 text-lg font-semibold text-text-primary">Recent entries</h4>
               </div>
-              <BedDouble className="h-5 w-5 text-cyan-300" />
+              <BedDouble className="h-5 w-5 text-cyan-500 dark:text-cyan-300" />
             </div>
 
             <div className="mt-5 space-y-3">
               {entries.length === 0 ? (
-                <div className="rounded-[1.5rem] border border-white/10 bg-white/5 p-5 text-sm text-slate-300">
+                <div className="rounded-[1.5rem] border border-border bg-card p-5 text-sm text-text-secondary">
                   No sleep entries yet. Add your first nightly log to begin tracking recovery.
                 </div>
               ) : (
