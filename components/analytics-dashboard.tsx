@@ -103,9 +103,9 @@ function AnalyticsCard({
   children: ReactNode;
 }) {
   return (
-    <section className="rounded-[2rem] border border-border bg-white/90 p-6 shadow-xl shadow-slate-200/70 backdrop-blur-xl dark:bg-[linear-gradient(135deg,rgba(8,15,32,0.92),rgba(15,23,42,0.62))] dark:shadow-black/25 sm:p-7">
-      <div className="flex items-start justify-between gap-4">
-        <div>
+    <section className="min-w-0 max-w-full rounded-[2rem] border border-border bg-white/90 p-6 shadow-xl shadow-slate-200/70 backdrop-blur-xl dark:bg-[linear-gradient(135deg,rgba(8,15,32,0.92),rgba(15,23,42,0.62))] dark:shadow-black/25 sm:p-7">
+      <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <div className="min-w-0">
           <p className="text-xs uppercase tracking-[0.24em] text-cyan-600 dark:text-cyan-200/80">{eyebrow}</p>
           <h2 className="mt-2 text-xl font-semibold text-text-primary">{title}</h2>
         </div>
@@ -121,9 +121,9 @@ function AnalyticsCard({
 
 function StatPill({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-2xl border border-border bg-card px-4 py-3">
+    <div className="min-w-0 rounded-2xl border border-border bg-card px-4 py-3">
       <p className="text-xs uppercase tracking-[0.18em] text-text-secondary">{label}</p>
-      <p className="mt-1 text-lg font-semibold text-text-primary">{value}</p>
+      <p className="mt-1 break-words text-lg font-semibold text-text-primary">{value}</p>
     </div>
   );
 }
@@ -140,7 +140,7 @@ function SectionHeader({ title, subtitle }: { title: string; subtitle: string })
 }
 
 function ChartShell({ children }: { children: ReactNode }) {
-  return <div className="h-[260px] w-full">{children}</div>;
+  return <div className="h-[260px] w-full min-w-0">{children}</div>;
 }
 
 export function AnalyticsDashboard({
@@ -166,9 +166,9 @@ export function AnalyticsDashboard({
 
   return (
     <div className="space-y-6">
-      <section className="rounded-[2.25rem] border border-border bg-white/90 p-6 shadow-xl shadow-slate-200/70 dark:bg-[radial-gradient(circle_at_top_left,rgba(34,211,238,0.16),transparent_35%),linear-gradient(135deg,rgba(8,15,32,0.96),rgba(15,23,42,0.74))] dark:shadow-black/30 sm:p-8">
-        <div className="flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">
-          <div className="space-y-4">
+      <section className="min-w-0 max-w-full overflow-hidden rounded-[2.25rem] border border-border bg-white/90 p-6 shadow-xl shadow-slate-200/70 dark:bg-[radial-gradient(circle_at_top_left,rgba(34,211,238,0.16),transparent_35%),linear-gradient(135deg,rgba(8,15,32,0.96),rgba(15,23,42,0.74))] dark:shadow-black/30 sm:p-8">
+        <div className="grid min-w-0 max-w-full gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] xl:items-end">
+          <div className="min-w-0 space-y-4">
             <span className="inline-flex w-fit rounded-full border border-cyan-400/20 bg-cyan-400/10 px-4 py-2 text-xs font-medium uppercase tracking-[0.24em] text-cyan-600 dark:text-cyan-200">
               Analytics
             </span>
@@ -180,7 +180,7 @@ export function AnalyticsDashboard({
             </div>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+          <div className="grid w-full min-w-0 max-w-full gap-3 sm:grid-cols-2 xl:grid-cols-3">
             <StatPill label="Workouts" value={`${workoutTotals.sessions}`} />
             <StatPill label="Workout minutes" value={`${workoutTotals.minutes} min`} />
             <StatPill label="Goal completion" value={`${goalCompletionSummary.completionRate}%`} />
@@ -188,7 +188,7 @@ export function AnalyticsDashboard({
         </div>
       </section>
 
-      <div className="grid gap-6 xl:grid-cols-2">
+      <div className="grid min-w-0 gap-6 xl:grid-cols-2">
         <AnalyticsCard
           eyebrow="Weekly Workout Activity"
           title="Workouts and active minutes"

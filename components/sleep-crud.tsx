@@ -48,14 +48,14 @@ function SleepHistoryRow({
   isSelected: boolean;
 }) {
   return (
-    <div className={`rounded-[1.5rem] border p-5 ${isSelected ? "border-cyan-400/30 bg-cyan-400/5" : "border-border bg-card"}`}>
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <div className="space-y-3">
+    <div className={`min-w-0 rounded-[1.5rem] border p-5 ${isSelected ? "border-cyan-400/30 bg-cyan-400/5" : "border-border bg-card"}`}>
+      <div className="space-y-4">
+        <div className="w-full min-w-0 space-y-3">
           <div className="flex flex-wrap items-center gap-3">
             <span className="rounded-full border border-border bg-secondary/70 px-3 py-1 text-xs font-medium uppercase tracking-[0.18em] text-cyan-600 dark:text-cyan-200/80">
               Sleep
             </span>
-            <span className="text-xs uppercase tracking-[0.18em] text-text-secondary">{new Date(entry.recordedAt).toLocaleString()}</span>
+            <span className="break-words text-xs uppercase tracking-[0.18em] text-text-secondary">{new Date(entry.recordedAt).toLocaleString()}</span>
             <ProgressPill quality={entry.quality} />
           </div>
           <div>
@@ -64,7 +64,7 @@ function SleepHistoryRow({
           </div>
         </div>
 
-        <div className="flex gap-2">
+        <div className="flex flex-wrap justify-end gap-2">
           <button
             type="button"
             onClick={() => onEdit(entry)}
@@ -197,9 +197,9 @@ export function SleepCrud({ entries }: SleepCrudProps) {
 
   return (
     <div className="space-y-6">
-      <section className="rounded-[2rem] border border-border bg-white/90 p-6 shadow-xl shadow-slate-200/70 dark:bg-[linear-gradient(135deg,rgba(8,15,32,0.92),rgba(15,23,42,0.62))] dark:shadow-black/30 sm:p-8">
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-          <div className="space-y-4">
+      <section className="min-w-0 max-w-full overflow-hidden rounded-[2rem] border border-border bg-white/90 p-6 shadow-xl shadow-slate-200/70 dark:bg-[linear-gradient(135deg,rgba(8,15,32,0.92),rgba(15,23,42,0.62))] dark:shadow-black/30 sm:p-8">
+        <div className="grid min-w-0 max-w-full gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-end">
+          <div className="min-w-0 space-y-4">
             <span className="inline-flex w-fit rounded-full border border-cyan-400/20 bg-cyan-400/10 px-4 py-2 text-xs font-medium uppercase tracking-[0.22em] text-cyan-600 dark:text-cyan-200">
               Sleep tracker
             </span>
@@ -211,7 +211,7 @@ export function SleepCrud({ entries }: SleepCrudProps) {
             </div>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="grid w-full min-w-0 max-w-full gap-3 sm:grid-cols-2 xl:grid-cols-4">
             <MetricCard label="Today" value={`${totalHoursToday.toFixed(1)} hrs`} icon={BedDouble} />
             <MetricCard label="Avg quality" value={`${averageQualityToday}/5`} icon={Star} />
             <MetricCard label="Entries" value={String(todaysEntries.length)} icon={CalendarDays} />
@@ -228,7 +228,7 @@ export function SleepCrud({ entries }: SleepCrudProps) {
                 {selectedEntry ? "Edit sleep entry" : "Add sleep entry"}
               </p>
               <h3 className="mt-2 text-xl font-semibold text-text-primary">
-                {selectedEntry ? "Update sleep log" : "Log today&apos;s sleep"}
+                {selectedEntry ? "Update sleep log" : "Log today's sleep"}
               </h3>
             </div>
             <div className="rounded-full border border-border bg-card px-3 py-1 text-xs font-medium text-text-secondary">
@@ -306,7 +306,7 @@ export function SleepCrud({ entries }: SleepCrudProps) {
         </div>
 
         <div className="space-y-6 rounded-[2rem] border border-border bg-card p-6 backdrop-blur-xl sm:p-8">
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid min-w-0 gap-4 sm:grid-cols-2">
             <div className="rounded-[1.75rem] border border-border bg-secondary/60 p-5">
               <p className="text-sm text-text-secondary">Today&apos;s sleep summary</p>
               <h4 className="mt-2 text-lg font-semibold text-text-primary">{totalHoursToday.toFixed(1)} hours</h4>

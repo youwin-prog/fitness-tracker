@@ -1,8 +1,13 @@
 import { getWorkoutSessions } from "@/actions/workout-actions";
 import { WorkoutCrud } from "@/components/workout-crud";
 
-export default async function WorkoutPage() {
-  const workouts = await getWorkoutSessions();
+type WorkoutPageProps = {
+  searchParams: Promise<{ sessionId?: string }>;
+};
 
-  return <WorkoutCrud workouts={workouts} />;
+export default async function WorkoutPage({ searchParams }: WorkoutPageProps) {
+  const workouts = await getWorkoutSessions();
+  const { sessionId } = await searchParams;
+
+  return <WorkoutCrud workouts={workouts} initialWorkoutId={sessionId} />;
 }

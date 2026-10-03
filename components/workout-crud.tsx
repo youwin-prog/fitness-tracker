@@ -9,6 +9,7 @@ import { createWorkout, deleteWorkout, updateWorkout, type WorkoutFormState } fr
 
 type WorkoutCrudProps = {
   workouts: WorkoutSession[];
+  initialWorkoutId?: string;
 };
 
 const initialState: WorkoutFormState = {};
@@ -27,8 +28,8 @@ function SubmitButton({ label }: { label: string }) {
   );
 }
 
-export function WorkoutCrud({ workouts }: WorkoutCrudProps) {
-  const [selectedWorkoutId, setSelectedWorkoutId] = useState<string | null>(workouts[0]?.id ?? null);
+export function WorkoutCrud({ workouts, initialWorkoutId }: WorkoutCrudProps) {
+  const [selectedWorkoutId, setSelectedWorkoutId] = useState<string | null>(initialWorkoutId ?? workouts[0]?.id ?? null);
   const selectedWorkout = useMemo(() => workouts.find((workout) => workout.id === selectedWorkoutId) ?? null, [selectedWorkoutId, workouts]);
 
   useEffect(() => {
@@ -218,29 +219,29 @@ export function WorkoutCrud({ workouts }: WorkoutCrudProps) {
             ) : (
               workouts.map((workout) => (
                 <div key={workout.id} className="rounded-[1.5rem] border border-border-color dark:border-white/10 bg-card dark:bg-slate-950/60 p-5">
-                  <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                    <div className="min-w-0 flex-1 space-y-3">
+                  <div className="space-y-4">
+                    <div className="w-full min-w-0 space-y-3">
                       <div>
                         <p className="text-sm uppercase tracking-[0.18em] text-red-200/80 dark:text-red-300/80">{workout.type}</p>
                         <h4 className="mt-1 text-lg font-semibold text-text-primary dark:text-white">{workout.title}</h4>
                       </div>
-                      <div className="grid w-full min-w-0 gap-3 sm:grid-cols-2">
+                      <div className="grid w-full min-w-0 grid-cols-1 gap-4 sm:grid-cols-2">
                         {[
                           { label: "Started at", value: new Date(workout.startedAt).toLocaleString() },
                           { label: "Duration", value: `${workout.durationMinutes ?? 0} min` },
                           { label: "Calories burned", value: `${workout.caloriesBurned ?? 0} kcal` },
                           { label: "Average heart rate", value: `${workout.heartRateAverage ?? 0} bpm` },
                         ].map((item) => (
-                          <div key={item.label} className="min-w-0 rounded-xl border border-border bg-secondary/60 p-3">
+                          <div key={item.label} className="w-full min-w-0 rounded-xl border border-border bg-secondary/60 p-3">
                             <p className="text-[0.65rem] uppercase tracking-[0.14em] text-text-secondary">{item.label}</p>
-                            <p className="mt-1 whitespace-nowrap text-sm font-medium text-text-primary">{item.value}</p>
+                            <p className="mt-1 break-words text-sm font-medium text-text-primary">{item.value}</p>
                           </div>
                         ))}
                       </div>
                       {workout.notes ? <p className="text-sm leading-7 text-text-secondary dark:text-slate-400">{workout.notes}</p> : null}
                     </div>
 
-                    <div className="flex gap-2">
+                    <div className="flex flex-wrap justify-end gap-2">
                       <button
                         type="button"
                         onClick={() => setSelectedWorkoutId(workout.id)}

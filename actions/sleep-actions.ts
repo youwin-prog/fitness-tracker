@@ -26,7 +26,7 @@ async function getAuthenticatedUser() {
     throw new Error("Unable to load the authenticated user.");
   }
 
-  const email = clerkUser.emailAddresses[0]?.emailAddress;
+  const email = clerkUser.primaryEmailAddress?.emailAddress ?? clerkUser.emailAddresses[0]?.emailAddress;
 
   if (!email) {
     throw new Error("Authenticated user is missing an email address.");

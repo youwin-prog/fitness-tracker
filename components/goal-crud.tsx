@@ -14,9 +14,9 @@ type GoalCrudProps = GoalModuleData;
 
 function MetricCard({ label, value, icon: Icon }: { label: string; value: string; icon: LucideIcon }) {
   return (
-    <div className="min-w-0 rounded-[1.75rem] border border-border-color dark:border-white/10 bg-card dark:bg-white/5 p-5 backdrop-blur-xl">
+    <div className="min-w-0 max-w-full rounded-[1.75rem] border border-border-color dark:border-white/10 bg-card dark:bg-white/5 p-5 backdrop-blur-xl">
       <div className="flex items-start justify-between gap-4">
-        <div>
+        <div className="min-w-0 lg:flex-1">
           <p className="text-sm text-text-secondary dark:text-slate-400">{label}</p>
           <p className="mt-2 text-2xl font-semibold text-text-primary dark:text-white">{value}</p>
         </div>
@@ -55,7 +55,7 @@ function GoalRow({
               {goal.targetDate ? `Due ${new Date(goal.targetDate).toLocaleDateString()}` : "No deadline"}
             </span>
           </div>
-          <div>
+          <div className="min-w-0 flex-1">
             <h4 className="text-lg font-semibold text-text-primary dark:text-white">{goal.title}</h4>
             {goal.description ? <p className="mt-1 text-sm text-text-secondary dark:text-slate-300">{goal.description}</p> : null}
           </div>
@@ -221,8 +221,8 @@ export function GoalCrud({ goals }: GoalCrudProps) {
 
   return (
     <div className="space-y-6">
-      <section className="rounded-[2rem] border border-border-color dark:border-white/10 bg-card dark:bg-[linear-gradient(135deg,rgba(8,15,32,0.92),rgba(15,23,42,0.62))] p-6 shadow-2xl dark:shadow-black/30 sm:p-8">
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+      <section className="min-w-0 max-w-full overflow-hidden rounded-[2rem] border border-border-color dark:border-white/10 bg-card dark:bg-[linear-gradient(135deg,rgba(8,15,32,0.92),rgba(15,23,42,0.62))] p-6 shadow-2xl dark:shadow-black/30 sm:p-8">
+        <div className="grid min-w-0 max-w-full gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-end">
           <div className="min-w-0 space-y-4">
             <span className="inline-flex w-fit rounded-full border border-red-400/20 bg-red-400/10 px-4 py-2 text-xs font-medium uppercase tracking-[0.22em] text-red-200 dark:text-red-300">
               Goals module
@@ -235,7 +235,7 @@ export function GoalCrud({ goals }: GoalCrudProps) {
             </div>
           </div>
 
-          <div className="grid w-full min-w-0 gap-3 sm:grid-cols-2 xl:flex-1 xl:grid-cols-4">
+          <div className="grid w-full min-w-0 max-w-full grid-cols-1 gap-3 sm:grid-cols-2">
             <MetricCard label="Active" value={String(activeGoals)} icon={Target} />
             <MetricCard label="Completed" value={String(completedGoals)} icon={BadgeCheck} />
             <MetricCard label="Due soon" value={String(dueSoon)} icon={CalendarDays} />

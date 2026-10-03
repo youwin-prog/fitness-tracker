@@ -43,27 +43,27 @@ function MealRow({
   isSelected: boolean;
 }) {
   return (
-    <div className={`rounded-[1.5rem] border p-5 ${isSelected ? "border-cyan-400/30 bg-cyan-400/5" : "border-border bg-card"}`}>
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <div className="space-y-3">
+    <div className={`min-w-0 rounded-[1.5rem] border p-5 ${isSelected ? "border-cyan-400/30 bg-cyan-400/5" : "border-border bg-card"}`}>
+      <div className="space-y-4">
+        <div className="w-full min-w-0 space-y-3">
           <div className="flex flex-wrap items-center gap-3">
             <span className="rounded-full border border-border bg-secondary/70 px-3 py-1 text-xs font-medium uppercase tracking-[0.18em] text-cyan-600 dark:text-cyan-200/80">
               {meal.type}
             </span>
-            <span className="text-xs uppercase tracking-[0.18em] text-text-secondary">{new Date(meal.eatenAt).toLocaleString()}</span>
+            <span className="break-words text-xs uppercase tracking-[0.18em] text-text-secondary">{new Date(meal.eatenAt).toLocaleString()}</span>
           </div>
           <div>
             <h4 className="text-lg font-semibold text-text-primary">{meal.name}</h4>
             <p className="mt-1 text-sm text-text-secondary">{meal.calories} kcal</p>
           </div>
-          <div className="grid gap-2 text-sm text-text-secondary sm:grid-cols-3">
+          <div className="grid w-full min-w-0 grid-cols-1 gap-2 text-sm text-text-secondary sm:grid-cols-3">
             <p>Protein: {meal.proteinGrams} g</p>
             <p>Carbs: {meal.carbsGrams} g</p>
             <p>Fat: {meal.fatGrams} g</p>
           </div>
         </div>
 
-        <div className="flex gap-2">
+        <div className="flex flex-wrap justify-end gap-2">
           <button
             type="button"
             onClick={() => onEdit(meal)}

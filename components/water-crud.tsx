@@ -301,7 +301,7 @@ export function WaterCrud({ entries, goalMl }: WaterCrudProps) {
       </section>
 
       <section className="grid gap-6 xl:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)]">
-        <div className="space-y-6 rounded-[2rem] border border-border bg-card p-6 backdrop-blur-xl sm:p-8">
+        <div className="min-w-0 space-y-6 rounded-[2rem] border border-border bg-card p-6 backdrop-blur-xl sm:p-8">
           <div className="flex items-center justify-between gap-4">
             <div>
               <p className="text-xs uppercase tracking-[0.22em] text-cyan-600 dark:text-cyan-200/80">Daily target</p>
@@ -312,12 +312,12 @@ export function WaterCrud({ entries, goalMl }: WaterCrudProps) {
             </div>
           </div>
 
-          <div className="grid gap-6 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:items-center">
-            <div className="flex justify-center">
+          <div className="grid min-w-0 grid-cols-1 gap-6">
+            <div className="flex min-w-0 justify-center">
               <ProgressRing progress={progressPercent} />
             </div>
 
-            <div className="space-y-4 rounded-[1.5rem] border border-border bg-secondary/60 p-5">
+            <div className="min-w-0 w-full space-y-4 rounded-[1.5rem] border border-border bg-secondary/60 p-5">
               <form onSubmit={handleGoalSubmit} className="space-y-4">
                 <label className="space-y-2 text-sm text-text-secondary">
                   <span>Daily water goal (ml)</span>
@@ -325,7 +325,7 @@ export function WaterCrud({ entries, goalMl }: WaterCrudProps) {
                     {...goalForm.register("goalMl")}
                     type="number"
                     min="1"
-                    className="w-full rounded-2xl border border-border bg-card px-4 py-3 text-text-primary outline-none transition focus:border-cyan-400/40"
+                    className="block min-w-0 w-full rounded-2xl border border-border bg-card px-4 py-3 text-text-primary outline-none transition focus:border-cyan-400/40"
                   />
                   {goalForm.formState.errors.goalMl ? <p className="text-xs text-rose-500">{goalForm.formState.errors.goalMl.message}</p> : null}
                 </label>
@@ -334,20 +334,20 @@ export function WaterCrud({ entries, goalMl }: WaterCrudProps) {
                   <button
                     type="submit"
                     disabled={isPending}
-                    className="inline-flex items-center justify-center rounded-full bg-cyan-400 px-5 py-3 text-sm font-medium text-slate-950 transition hover:bg-cyan-300 disabled:cursor-not-allowed disabled:opacity-70"
+                    className="inline-flex w-full items-center justify-center rounded-full bg-cyan-400 px-5 py-3 text-sm font-medium text-slate-950 transition hover:bg-cyan-300 disabled:cursor-not-allowed disabled:opacity-70"
                   >
                     Save goal
                   </button>
                 </div>
               </form>
 
-              <div className="grid gap-3 sm:grid-cols-2">
+              <div className="grid w-full min-w-0 grid-cols-2 gap-2">
                 {quickAddAmounts.map((amount) => (
                   <button
                     key={amount}
                     type="button"
                     onClick={() => handleQuickAdd(amount)}
-                    className="inline-flex items-center justify-center rounded-2xl border border-cyan-400/20 bg-cyan-400/10 px-4 py-3 text-sm font-medium text-cyan-700 transition hover:bg-cyan-400/20 dark:text-cyan-100"
+                    className="inline-flex min-w-0 w-full items-center justify-center whitespace-nowrap rounded-2xl border border-cyan-400/20 bg-cyan-400/10 px-2 py-3 text-sm font-medium text-cyan-700 transition hover:bg-cyan-400/20 dark:text-cyan-100 sm:px-4"
                   >
                     <Plus className="mr-2 h-4 w-4" />
                     Quick add {amount} ml
@@ -355,7 +355,7 @@ export function WaterCrud({ entries, goalMl }: WaterCrudProps) {
                 ))}
               </div>
 
-              <div className="rounded-[1.25rem] border border-border bg-card px-4 py-3 text-sm text-text-secondary">
+              <div className="min-w-0 rounded-[1.25rem] border border-border bg-card px-4 py-3 text-sm leading-6 text-text-secondary">
                 You&apos;ve consumed {todayTotal} ml today. {remainingMl} ml left to hit your target.
               </div>
             </div>
@@ -369,7 +369,7 @@ export function WaterCrud({ entries, goalMl }: WaterCrudProps) {
               </div>
             </div>
 
-            <div className="mt-5 grid grid-cols-7 gap-3">
+            <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4 md:grid-cols-7">
               {recentDays.map((day) => {
                 const percent = goalMl > 0 ? Math.min(100, Math.round((day.amountMl / goalMl) * 100)) : 0;
 

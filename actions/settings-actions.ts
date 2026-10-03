@@ -18,7 +18,7 @@ async function getAuthenticatedUser() {
     throw new Error("Unable to load the authenticated user.");
   }
 
-  const email = clerkUser.emailAddresses[0]?.emailAddress;
+  const email = clerkUser.primaryEmailAddress?.emailAddress ?? clerkUser.emailAddresses[0]?.emailAddress;
 
   if (!email) {
     throw new Error("Authenticated user is missing an email address.");
@@ -72,7 +72,7 @@ export async function updateDarkMode(enabled: boolean) {
   await prisma.userSettings.upsert({
     where: { userId: user.id },
     update: { darkMode: enabled },
-    create: { userId: user.id },
+    create: { userId: user.id, darkMode: enabled },
   });
 
   revalidatePath("/settings");
@@ -112,7 +112,7 @@ export async function updatePublicProfile(enabled: boolean) {
   await prisma.userSettings.upsert({
     where: { userId: user.id },
     update: { publicProfile: enabled },
-    create: { userId: user.id },
+    create: { userId: user.id, publicProfile: enabled },
   });
 
   revalidatePath("/settings");

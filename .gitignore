@@ -3,8 +3,11 @@ node_modules
 coverage
 .env
 .env.local
+.env.*
+!.env.example
 .env.*.local
 .DS_Store
+*.log
 
 # clerk configuration (can include secrets)
 /.clerk/
